@@ -1,0 +1,29 @@
+{
+  "name": "nodechatsystem",
+  "version": "1.0.0",
+  "description": "chatting system for node JS",
+  "main": "server.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm start:dev",
+    "start:prod": "node dist/server.js",
+    "start:dev": "nodemon --exec ts-node server.ts"
+  },
+  "keywords": [
+    "socket"
+  ],
+  "author": "achawayne sixtus",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.17.1",
+    "nodechatsystem": "file:",
+    "nodemon": "^3.1.7",
+    "socket.io": "^4.8.1"
+  }
+}
