@@ -56,11 +56,13 @@ io.on('connection', (socket) => {
     // Listen for ping event from the client, keep the client connected
     socket.on('ping', () => {
         // Respond with a pong
+        console.log('we gat pingged.....')
         socketController.keepConnectionAlive()
     });
 
     socket.on('connected-user-list', () => {
         // Respond with a pong
+
         socketController.getAllConnectedUsers()
     });
 

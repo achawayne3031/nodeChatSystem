@@ -37,6 +37,8 @@ const socketController = {
 
     sendMessage: async(messageBody: MessageBody) => {
         io.emit("emit-sent-message", messageBody);
+        io.emit("emit-sent-message-notification", messageBody);
+
         let connectedAlready = !!connectedUsers.find((value) => value.userCode === messageBody.to)
 
         if(connectedAlready){
@@ -61,7 +63,7 @@ const socketController = {
 
     keepConnectionAlive: async () => {
         // emit Pong to client, to keep connection alive
-       // socketInstance.emit('pong', 'Pong from server');
+        io.emit('pong', 'Pong from server');
     },
 
     getAllConnectedUsers() {

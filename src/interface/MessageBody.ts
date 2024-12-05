@@ -4,5 +4,6 @@ export interface MessageBody{
     to: string,
     message: string | BinaryType,
     type: string,
-    name: string
+    name: string,
+    time_ago: Date
 }
