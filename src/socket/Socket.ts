@@ -1,18 +1,13 @@
 
+import express from 'express';
+import { createServer } from 'node:http';
+const env = require('dotenv').config({ debug: process.env.DEBUG })
 import { Server } from 'socket.io';
 
+export const port = process.env.PORT || 3000;
+export const app = express();
+export const server = createServer(app);
+export const io = new Server(server, { cors: { origin: '*'}, maxHttpBufferSize: 1e8});
 
-var users = [];
 
-
-
-export const connectedUser = (atlasUser: string) => {
-
-    // socket.on('connected', (userId)=>{
-    //     users[userId] = socket.id;
-    //     console.log(`connection opened for user ${userId}`)
-    //     console.log(users)
-    // });
-
-}
 

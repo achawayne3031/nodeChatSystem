@@ -1,14 +1,9 @@
-import express from 'express';
-import { createServer } from 'node:http';
-const env = require('dotenv').config({ debug: process.env.DEBUG })
-import { Server } from 'socket.io';
-import { MessageBody } from './src/interface/MessageBody';
-const socketController = require('./src/controller/socketController')
 
-const app = express();
-const server = createServer(app);
-var io = new Server(server, { cors: { origin: '*'}, maxHttpBufferSize: 1e8});
-const port = process.env.PORT || 3000;
+import { MessageBody } from './src/interface/MessageBody';
+import { VendorOrderNotification } from './src/interface/VendorOrderNotification';
+const socketController = require('./src/controller/socketController')
+import { io, app, server, port } from './src/socket/Socket'
+
 
 
 
@@ -26,35 +21,47 @@ io.on('connection', (socket) => {
 
     //// Handle connected users 
     socket.on('connected', (userId: string) => {
-        socketController.connected(socket, userId);
+        socketController.connected(socket, userId, io);
         socketController.joinRoom(socket)
+
+         io.emit("connection-success", socket.id);
+        // io.to(socket.id).emit("connection-success", socket.id);
+        // console.log(socket.id, 'current ID')
+
+        socketController.getAllConnectedUsers()
+
     });
 
 
     /// Handle send messages 
-    socket.on("send-message", (data: any) => {
-       /// console.log(data)
-        socketController.sendMessage(io, data)
+    socket.on("send-message", (data: MessageBody) => {
+        console.log(data)
+        socketController.sendMessage(data)
     });
 
      /// Handle vendor notifications 
-     socket.on("vendor-notification", (data: any) => {
-       // console.log(data)
-        socketController.sendMessage(io, data)
+     socket.on("vendor-order-notification", (data: VendorOrderNotification) => {
+        socketController.notifyVendor(data)
     });
 
 
      // Handle disconnection
-    socket.on('disconnect', () => {
-        socketController.leaveRoom(socket)
-        console.log('disconnect users.......', socket.id)
+    socket.on('disconnect', async () => {
+       await socketController.leaveRoom(socket)
+        let currentUser = await socketController.getAllConnectedUsers()
+
     });
 
 
     // Listen for ping event from the client, keep the client connected
     socket.on('ping', () => {
         // Respond with a pong
-        socketController.keepConnectionAlive(socket)
+        socketController.keepConnectionAlive()
+    });
+
+    socket.on('connected-user-list', () => {
+        // Respond with a pong
+        socketController.getAllConnectedUsers()
     });
 
 
